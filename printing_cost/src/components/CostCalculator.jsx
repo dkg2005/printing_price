@@ -34,13 +34,13 @@ export default function CostCalculator({
     const lines = [
       `Quantity:          ${quantity}`,
       `Size:              ${size}${size==="Custom" ? ` (${customW}×${customH})` : ""}`,
-      `Rate/page:         ₹${rate}`,
+      `Rate/page:         ${rate}`,
       `Color Mode:        ${colorMode}`,
       `Paper Type:        ${paperType}`,
       `Print Side:        ${printSide}`,
       `Binding:           ${binding}`,
       `-------------------------------`,
-      `TOTAL PRICE:       ₹${total.toFixed(2)}`,
+      `TOTAL PRICE:       ${total.toFixed(2)}`,
     ];
 
     lines.forEach(line => {

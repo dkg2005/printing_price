@@ -9,7 +9,9 @@ export default function PriceCalculator({
 }) {
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Print Settings</h2>
+      <h2 className="text-3xl font-bold text-center text-gray-800 mb-6 shadow-md p-4 bg-white rounded-lg">
+          🖨️ Printing Price Calculator</h2>
+
 
       <label className="block">
         <span>Quantity</span>
