@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable"; 
 
 // cost multipliers
 const sizeMul = { A4: 1, A3: 1.5, Letter: 1.2, Custom: 1.3 };
@@ -28,32 +29,33 @@ export default function CostCalculator({
 
   const buildPDF = () => {
     const doc = new jsPDF();
-    let y = 20;
-    doc.setFontSize(16);
-    doc.text("Print Cost Reciept", 105, y, { align: "center" });
-    doc.setFontSize(12);
-    y += 20;
+    doc.setFontSize(18);
+    doc.text("Print Cost Receipt", 105, 15, { align: "center" });
 
-    const lines = [
-      `Quantity:                ${quantity}`,
-      `Size:                       ${size}${size==="Custom" ? ` (${customW}×${customH})` : ""}`,
-      `Rate/page:             Rs.${rate}`,
-      `Color Mode:            ${colorMode}`,
-      `Paper Type:            ${paperType}`,
-      `Print Side:              ${printSide}`,
-      `Binding:                 ${binding}`,
-      `-------------------------------`,
-      `TOTAL PRICE:       Rs.${total.toFixed(2)}`,
-    ];
-
-    lines.forEach(line => {
-      doc.text(line, 85, y);
-      y += 8;
+    autoTable(doc, {
+      startY: 30,
+      head: [["Item", "Value"]],
+      body: [
+        ["Quantity", quantity],
+        ["Size", size === "Custom" ? `${size} (${customW}×${customH})` : size],
+        ["Rate per page", `Rs.${rate}`],
+        ["Color Mode", colorMode],
+        ["Paper Type", paperType],
+        ["Print Side", printSide],
+        ["Binding", binding],
+        ["TOTAL PRICE", `Rs.${total.toFixed(2)}`],
+      ],
+      theme: "grid",
+      headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+      bodyStyles: { fontSize: 12 },
+      columnStyles: {
+        0: { cellWidth: 70 },
+        1: { cellWidth: 100 },
+      },
     });
 
     return doc;
   };
-
   const downloadPDF = () => {
     buildPDF().save("print-reciept.pdf");
   };
