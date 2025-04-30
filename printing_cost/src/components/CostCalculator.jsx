@@ -1,19 +1,22 @@
 import React, { useMemo } from "react";
 import { jsPDF } from "jspdf";
 
-// multipliers
+// cost multipliers
 const sizeMul = { A4: 1, A3: 1.5, Letter: 1.2, Custom: 1.3 };
-const propMul = {
+const propMul = {   // Can be adjusted
   Color: 1.2, "Black & White": 1.0,
   Glossy: 1.3, Matte: 1.1, Recycled: 0.9,
   "Single Side": 1.0, "Double Side": 1.8,
   None: 1.0, Spiral: 1.05, Stapled: 1.02, Pinned: 1.01,
 };
 
+
 export default function CostCalculator({
   quantity, size, customW, customH, rate,
   colorMode, paperType, printSide, binding,
-}) {
+}) 
+
+{
   const total = useMemo(() => {
     const s = sizeMul[size] ?? 1;
     const p = propMul[colorMode]
@@ -27,24 +30,24 @@ export default function CostCalculator({
     const doc = new jsPDF();
     let y = 20;
     doc.setFontSize(16);
-    doc.text("Print Cost Quote", 105, y, { align: "center" });
+    doc.text("Print Cost Reciept", 105, y, { align: "center" });
     doc.setFontSize(12);
-    y += 10;
+    y += 20;
 
     const lines = [
-      `Quantity:          ${quantity}`,
-      `Size:              ${size}${size==="Custom" ? ` (${customW}×${customH})` : ""}`,
-      `Rate/page:         ${rate}`,
-      `Color Mode:        ${colorMode}`,
-      `Paper Type:        ${paperType}`,
-      `Print Side:        ${printSide}`,
-      `Binding:           ${binding}`,
+      `Quantity:                ${quantity}`,
+      `Size:                       ${size}${size==="Custom" ? ` (${customW}×${customH})` : ""}`,
+      `Rate/page:             Rs.${rate}`,
+      `Color Mode:            ${colorMode}`,
+      `Paper Type:            ${paperType}`,
+      `Print Side:              ${printSide}`,
+      `Binding:                 ${binding}`,
       `-------------------------------`,
-      `TOTAL PRICE:       ${total.toFixed(2)}`,
+      `TOTAL PRICE:       Rs.${total.toFixed(2)}`,
     ];
 
     lines.forEach(line => {
-      doc.text(line, 20, y);
+      doc.text(line, 85, y);
       y += 8;
     });
 
@@ -52,15 +55,15 @@ export default function CostCalculator({
   };
 
   const downloadPDF = () => {
-    buildPDF().save("print-quote.pdf");
+    buildPDF().save("print-reciept.pdf");
   };
 
   const sharePDF = async () => {
     const doc  = buildPDF();
     const blob = doc.output("blob");
-    const file = new File([blob], "print-quote.pdf", { type: "application/pdf" });
+    const file = new File([blob], "print-reciept.pdf", { type: "application/pdf" });
     if (navigator.canShare?.({ files: [file] })) {
-      navigator.share({ files: [file], title: "Print Quote" }).catch(console.error);
+      navigator.share({ files: [file], title: "Print Reciept" }).catch(console.error);
     } else {
       alert("Sharing not supported on this device.");
     }
